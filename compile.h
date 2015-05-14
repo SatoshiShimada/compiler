@@ -1,14 +1,17 @@
 
+typedef enum {
+	END_OF_FILE,
+	NUMBER,
+	OPERATOR,
+	CHAR,
+	STRING,
+	SIGN
+} Token_type;
+
 typedef struct {
 	int value;
 	//int type;
-	enum {
-		NUMBER,
-		OPERATOR,
-		CHAR,
-		STRING,
-		SIGN
-	} type;
+	Token_type type;
 } Token;
 
-int compile(void);
+int compile(FILE *);
