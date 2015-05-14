@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 {
 	FILE *fp;
 	
-	fp = fopen("test.c", "r");
+	fp = fopen("test.txt", "r");
 	if(!fp) {
 		fprintf(stderr, "file open error\n");
 		return -1;
