@@ -7,8 +7,16 @@
 
 int main(int argc, char **argv)
 {
+	FILE *fp;
+	
+	fp = fopen("test.c", "r");
+	if(!fp) {
+		fprintf(stderr, "file open error\n");
+		return -1;
+	}
 	
 	compile();
 	
+	fclose(fp);
 	return 0;
 }
