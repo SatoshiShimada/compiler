@@ -1,3 +1,11 @@
 100
 123
 -432
+
+int main(void)
+{
+	int value;
+	char msg;
+
+	return 0;
+}
