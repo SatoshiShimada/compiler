@@ -16,7 +16,6 @@ char f_fp; /* flag of file pointer */
 int compile(FILE *fp)
 {
 	Token token;
-	//Token_type type;
 	
 	fin = fp;
 	f_fp = 1;
@@ -52,27 +51,27 @@ Token next_token(void)
 	
 	i = 0;
 	
-	for(;;) {
-		c = next_char();
-		if(c == EOF) {
-			token.value = 0;
-			token.type = END_OF_FILE;
-			return token;
-		} else if(isdigit(c)) {
+	c = next_char();
+	if(c == EOF) {
+		token.value = 0;
+		token.type = END_OF_FILE;
+		return token;
+	} else if(isdigit(c)) {
+		buf[i++] = c;
+		for( ;; ) {
+			c = next_char();
+			if(!isdigit(c)) break;
 			buf[i++] = c;
-			token.type = NUMBER;
-		} else if(isoperator(c)) {
-			token.value = c;
-			token.type = OPERATOR;
-			return token;
-		} else {
-			
 		}
-	}
-	
-	if(token.type == NUMBER) {
-		buf[i] = '\0';
+		buf[i] = '¥0';
 		token.value = atoi(buf);
+		token.type = NUMBER;
+	} else if(isoperator(c)) {
+		token.value = c;
+		token.type = OPERATOR;
+		return token;
+	} else {
+			
 	}
 	
 	return token;
