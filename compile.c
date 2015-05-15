@@ -60,7 +60,10 @@ Token next_token(void)
 		buf[i++] = c;
 		for( ;; ) {
 			c = next_char();
-			if(!isdigit(c)) break;
+			if(!isdigit(c)) {
+				ungetc(c, fin);
+				break;
+			}
 			buf[i++] = c;
 		}
 		buf[i] = '¥0';
