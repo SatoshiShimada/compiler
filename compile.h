@@ -5,6 +5,7 @@ typedef enum {
 	NUMBER,
 	OPERATOR,
 	CHAR,
+	SPACE,
 	STRING,
 	SIGN
 } Token_type;

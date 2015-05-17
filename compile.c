@@ -53,11 +53,14 @@ Token next_token(void)
 	i = 0;
 	
 	c = next_char();
-	if(c == EOF) {
+
+	switch(token_type[c]) {
+	case EOF:
 		token.value = 0;
 		token.type = END_OF_FILE;
 		return token;
-	} else if(isdigit(c)) {
+		break;
+	case NUMBER:
 		buf[i++] = c;
 		for( ;; ) {
 			c = next_char();
@@ -70,12 +73,14 @@ Token next_token(void)
 		buf[i] = '¥0';
 		token.value = atoi(buf);
 		token.type = NUMBER;
-	} else if(isoperator(c)) {
+		break;
+	case OPERATOR:
 		token.value = c;
 		token.type = OPERATOR;
 		return token;
-	} else {
-			
+		break;
+	default:
+		break;
 	}
 	
 	return token;
@@ -103,6 +108,51 @@ int init_token_type(void)
 	for(i = '0'; i < '9'; i++) {
 		token_type[i] = NUMBER;
 	}
+	
+	for(i = 'a'; i < 'z'; i++) {
+		token_type[i] = CHAR;
+	}
+	
+	for(i = 'A'; i < 'Z'; i++) {
+		token_type[i] = CHAR;
+	}
+	
+	token_type['_'] = CHAR;
+	
+	token_type[' '] = SPACE;
+	token_type['\n'] = SPACE;
+	token_type['\t'] = SPACE;
+	
+	token_type['!'] = OPERATOR;
+	token_type['\"'] = OPERATOR;
+	token_type['#'] = OPERATOR;
+	token_type['%'] = OPERATOR;
+	token_type['&'] = OPERATOR;
+	token_type['\''] = OPERATOR;
+	token_type['('] = OPERATOR;
+	token_type[')'] = OPERATOR;
+	token_type['*'] = OPERATOR;
+	token_type['+'] = OPERATOR;
+	token_type[','] = OPERATOR;
+	token_type['-'] = OPERATOR;
+	token_type['.'] = OPERATOR;
+	token_type['/'] = OPERATOR;
+	token_type['@'] = OPERATOR;
+	token_type['['] = OPERATOR;
+	token_type[']'] = OPERATOR;
+	token_type['{'] = OPERATOR;
+	token_type['}'] = OPERATOR;
+	token_type['\\'] = OPERATOR;
+	token_type['^'] = OPERATOR;
+	token_type['`'] = OPERATOR;
+	token_type['|'] = OPERATOR;
+	token_type['~'] = OPERATOR;
+	token_type['<'] = OPERATOR;
+	token_type['>'] = OPERATOR;
+	token_type[':'] = OPERATOR;
+	token_type[';'] = OPERATOR;
+	token_type['='] = OPERATOR;
+	token_type['?'] = OPERATOR;
 	
 	return 0;
 }
