@@ -12,6 +12,7 @@ int isoperator(int c);
 /* global variable */
 FILE *fin;
 char f_fp; /* flag of file pointer */
+char token_type[256];
 
 int compile(FILE *fp)
 {
@@ -89,4 +90,19 @@ int isoperator(int c)
 	} else {
 		return 0;
 	}
+}
+
+int init_token_type(void)
+{
+	int i;
+	
+	for(i = 0; i < sizeof(token_type); i++) {
+		token_type[i] = UNSET;
+	}
+	
+	for(i = '0'; i < '9'; i++) {
+		token_type[i] = NUMBER;
+	}
+	
+	return 0;
 }

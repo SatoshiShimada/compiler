@@ -1,5 +1,6 @@
 
 typedef enum {
+	UNSET,
 	END_OF_FILE,
 	NUMBER,
 	OPERATOR,
