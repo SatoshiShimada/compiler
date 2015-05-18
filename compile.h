@@ -1,7 +1,7 @@
 
 typedef enum {
-	UNSET,
-	END_OF_FILE,
+	UNSET = 0,
+	END_OF_FILE = 10,
 	NUMBER,
 	OPERATOR,
 	CHAR,

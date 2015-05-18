@@ -7,12 +7,13 @@
 
 char next_char(void);
 Token next_token(void);
-int isoperator(int c);
+int init_token_type(void);
 
 /* global variable */
 FILE *fin;
 char f_fp; /* flag of file pointer */
 char token_type[256];
+char f_init_type;
 
 int compile(FILE *fp)
 {
@@ -21,12 +22,10 @@ int compile(FILE *fp)
 	fin = fp;
 	f_fp = 1;
 	
-	for(;;) {
-		token = next_token();
-		if(token.type == END_OF_FILE) break;
-		
-		printf("%d: %d\n", (int)token.type, token.value);
-	}
+	token = next_token();
+	if(token.type == END_OF_FILE) ;//break;
+	
+	printf("%d: %d\n", (int)token.type, token.value);
 	
 	f_fp = 0;
 	return 0;
@@ -52,6 +51,8 @@ Token next_token(void)
 	
 	i = 0;
 	
+	if(f_init_type == 0) init_token_type();
+	
 	c = next_char();
 
 	switch(token_type[c]) {
@@ -64,13 +65,13 @@ Token next_token(void)
 		buf[i++] = c;
 		for( ;; ) {
 			c = next_char();
-			if(!isdigit(c)) {
+			if(token_type[c] != NUMBER) {
 				ungetc(c, fin);
 				break;
 			}
 			buf[i++] = c;
 		}
-		buf[i] = '¥0';
+		buf[i] = '\0';
 		token.value = atoi(buf);
 		token.type = NUMBER;
 		break;
@@ -86,20 +87,11 @@ Token next_token(void)
 	return token;
 }
 
-int isoperator(int c)
-{
-	if(c == '+' || c == '-' || c == '*' || c == '/' || c == '%' ||
-	   c == '!' || c == '|' || c == '&' || c == '^')
-	{
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
 int init_token_type(void)
 {
 	int i;
+	
+	if(f_init_type == 1) return 0;
 	
 	for(i = 0; i < sizeof(token_type); i++) {
 		token_type[i] = UNSET;
@@ -153,6 +145,8 @@ int init_token_type(void)
 	token_type[';'] = OPERATOR;
 	token_type['='] = OPERATOR;
 	token_type['?'] = OPERATOR;
+	
+	f_init_type = 1;
 	
 	return 0;
 }
