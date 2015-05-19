@@ -1,5 +1,7 @@
 int main(void)
 {
+	int value = 123;
+
 	printf("Hello\n");
 	
 	return 0;

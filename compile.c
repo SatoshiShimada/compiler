@@ -6,6 +6,7 @@
 
 #include "compile.h"
 
+int statement(void);
 char next_char(void);
 Token next_token(void);
 Token next_token_sub(void);
@@ -19,11 +20,20 @@ char f_init_type;
 
 int compile(FILE *fp)
 {
-	Token token;
-	int i;
-	
 	fin = fp;
 	f_fp = 1;
+	
+	statement();
+	
+	f_fp = 0;
+	return 0;
+}
+
+int statement(void)
+{
+	Token token, ntoken, nntoken, nnntoken;
+	Variable variable;
+	int i;
 	
 	for(i = 0; i < 10000; i++) {
 		token = next_token();
@@ -36,22 +46,44 @@ int compile(FILE *fp)
 		
 		switch(token.type) {
 		case NUMBER:
-			printf("number  : %d\n", token.value);
+			printf("%d ", token.value);
 			break;
 		case KEYWORD:
-			printf("keyword : %s\n", token.string);
+			if(!strcmp(token.string, "int") || !strcmp(token.string, "void") || !strcmp(token.string, "short") ||
+				!strcmp(token.string, "long") || !strcmp(token.string, "char"))
+			{
+				ntoken = next_token();
+				if(ntoken.type == SYMBOL) {
+					nntoken = next_token();
+					if(nntoken.type == OPERATOR && nntoken.value == '=') {
+						nnntoken = next_token();
+						if(nnntoken.type == NUMBER) {
+							variable.value = nnntoken.value;
+							variable.type = INT;
+							
+							printf("type: %s, value: %d\n", "int", variable.value);
+						}
+					}
+				}
+			} else {
+				
+			}
+			printf("%s ", token.string);
 			break;
 		case STRING:
-			printf("string  : %s\n", token.string);
+			printf("%s ", token.string);
 			break;
 		case CHAR:
-			printf("char    : %c\n", token.value);
+			printf("%c ", token.value);
 			break;
 		case SYMBOL:
-			printf("symbol  : %s\n", token.string);
+			printf("%s ", token.string);
 			break;
 		case OPERATOR:
-			printf("operator: %c\n", token.value);
+			printf("%c ", token.value);
+			break;
+		case SPLIT:
+			printf("\n%c\n", token.value);
 			break;
 		default:
 			printf("* ");
@@ -59,7 +91,6 @@ int compile(FILE *fp)
 		}
 	}
 	
-	f_fp = 0;
 	return 0;
 }
 
@@ -155,6 +186,10 @@ next_token_begin:
 		strncpy(token.string, buf, 50);
 		token.type = SYMBOL;
 		break;
+	case SPLIT:
+		token.value = c;
+		token.type = SPLIT;
+		break;
 	default:
 		token.type = UNSET;
 		break;
@@ -235,19 +270,19 @@ int init_token_type(void)
 	token_type['%'] = OPERATOR;
 	token_type['&'] = OPERATOR;
 	token_type['\''] = OPERATOR;
-	token_type['('] = OPERATOR;
-	token_type[')'] = OPERATOR;
+	token_type['('] = SPLIT;
+	token_type[')'] = SPLIT;
 	token_type['*'] = OPERATOR;
 	token_type['+'] = OPERATOR;
-	token_type[','] = OPERATOR;
+	token_type[','] = SPLIT;
 	token_type['-'] = OPERATOR;
 	token_type['.'] = OPERATOR;
 	token_type['/'] = OPERATOR;
 	token_type['@'] = OPERATOR;
-	token_type['['] = OPERATOR;
-	token_type[']'] = OPERATOR;
-	token_type['{'] = OPERATOR;
-	token_type['}'] = OPERATOR;
+	token_type['['] = SPLIT;
+	token_type[']'] = SPLIT;
+	token_type['{'] = SPLIT;
+	token_type['}'] = SPLIT;
 	token_type['\\'] = OPERATOR;
 	token_type['^'] = OPERATOR;
 	token_type['`'] = OPERATOR;
@@ -255,8 +290,8 @@ int init_token_type(void)
 	token_type['~'] = OPERATOR;
 	token_type['<'] = OPERATOR;
 	token_type['>'] = OPERATOR;
-	token_type[':'] = OPERATOR;
-	token_type[';'] = OPERATOR;
+	token_type[':'] = SPLIT;
+	token_type[';'] = SPLIT;
 	token_type['='] = OPERATOR;
 	token_type['?'] = OPERATOR;
 	token_type[0] = END_OF_FILE;

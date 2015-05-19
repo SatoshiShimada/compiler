@@ -12,10 +12,25 @@ typedef enum {
 	SPLIT,
 } Token_type;
 
+typedef enum {
+	VOID,
+	INT,
+	CHAR,
+	SHORT,
+	LONG,
+	FLOAT,
+	DOUBLE
+} Variable_type;
+
 typedef struct {
 	int value;
 	char string[50];
 	Token_type type;
 } Token;
+
+typedef struct {
+	int value;
+	Variable_type type;
+} Variable;
 
 int compile(FILE *);
