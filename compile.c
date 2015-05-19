@@ -8,6 +8,7 @@
 
 char next_char(void);
 Token next_token(void);
+Token next_token_sub(void);
 int init_token_type(void);
 
 /* global variable */
@@ -36,6 +37,9 @@ int compile(FILE *fp)
 		switch(token.type) {
 		case NUMBER:
 			printf("number  : %d\n", token.value);
+			break;
+		case KEYWORD:
+			printf("keyword : %s\n", token.string);
 			break;
 		case STRING:
 			printf("string  : %s\n", token.string);
@@ -71,7 +75,7 @@ char next_char(void)
 	return c;
 }
 
-Token next_token(void)
+Token next_token_sub(void)
 {
 	Token token;
 	char c;
@@ -157,6 +161,43 @@ next_token_begin:
 	}
 	
 	return token;
+}
+
+Token next_token(void) {
+	Token token;
+	
+	token = next_token_sub();
+	
+	if(token.type == SYMBOL) {
+		if(is_keyword(token.string)) {
+			token.type = KEYWORD;
+		} else {
+			token.type = SYMBOL;
+		}
+	}
+	
+	return token;
+}
+
+#define KEYWORD				1
+#define NO_KEYWORD			0
+int is_keyword(char *word)
+{
+	/* Reserved keywords list for C language */
+	char keywords[][20] = {
+		"auto", "break", "case", "char", "const", "continue", "default", "do", "double",
+		"else", "enum", "extern", "float", "for", "goto", "if", "int", "long", "register",
+		"return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef",
+		"union", "unsigned", "void", "volatile", "while", "_Packed"
+	};
+	int i;
+	int keywords_count = 33;
+	
+	for(i = 0; i < keywords_count; i++) {
+		if(!strcmp(word, keywords[i]))
+			return KEYWORD;
+	}
+	return NO_KEYWORD;
 }
 
 int init_token_type(void)

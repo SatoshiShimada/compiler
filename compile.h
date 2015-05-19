@@ -7,7 +7,9 @@ typedef enum {
 	OPERATOR,
 	CHAR,
 	STRING,
-	SYMBOL
+	SYMBOL,
+	KEYWORD,
+	SPLIT,
 } Token_type;
 
 typedef struct {
