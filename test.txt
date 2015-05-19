@@ -1,11 +1,6 @@
-#include <stdio.h>
-
 int main(void)
 {
-	int value = 100;
-	char msg = "test";
-
-	printf("%s", msg);
-
+	printf("Hello\n");
+	
 	return 0;
 }

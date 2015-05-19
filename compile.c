@@ -28,20 +28,23 @@ int compile(FILE *fp)
 		token = next_token();
 		if(token.type == END_OF_FILE) {
 			break;
+		} else if(token.type == UNSET) {
+			fprintf(stderr, "Error\n");
+			return -1;
 		}
 		
 		switch(token.type) {
 		case NUMBER:
-			printf("number: %d\n", token.value);
+			printf("number  : %d\n", token.value);
 			break;
 		case STRING:
-			printf("string: %s\n", token.string);
+			printf("string  : %s\n", token.string);
 			break;
 		case CHAR:
-			printf("char: %c\n", token.value);
+			printf("char    : %c\n", token.value);
 			break;
 		case SYMBOL:
-			printf("symbol: %s\n", token.string);
+			printf("symbol  : %s\n", token.string);
 			break;
 		case OPERATOR:
 			printf("operator: %c\n", token.value);
@@ -117,7 +120,6 @@ next_token_begin:
 			c = next_char();
 			if(c != '\\') {
 				token.value = c;
-				break;
 			} else {
 				c = next_char();
 				token.value = c;
@@ -167,19 +169,19 @@ int init_token_type(void)
 		token_type[i] = UNSET;
 	}
 	
-	for(i = '0'; i < '9'; i++) {
+	for(i = '0'; i <= '9'; i++) {
 		token_type[i] = NUMBER;
 	}
 	
-	for(i = 'a'; i < 'z'; i++) {
+	for(i = 'a'; i <= 'z'; i++) {
 		token_type[i] = SYMBOL;
 	}
 	
-	for(i = 'A'; i < 'Z'; i++) {
+	for(i = 'A'; i <= 'Z'; i++) {
 		token_type[i] = SYMBOL;
 	}
 	
-	token_type['_'] = CHAR;
+	token_type['_'] = SYMBOL;
 	
 	token_type[' '] = SPACE;
 	token_type['\n'] = SPACE;
