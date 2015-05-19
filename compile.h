@@ -2,12 +2,12 @@
 typedef enum {
 	UNSET = 0,
 	END_OF_FILE = 10,
+	SPACE,
 	NUMBER,
 	OPERATOR,
 	CHAR,
-	SPACE,
 	STRING,
-	SIGN
+	SYMBOL
 } Token_type;
 
 typedef struct {

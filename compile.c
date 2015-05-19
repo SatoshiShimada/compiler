@@ -32,13 +32,19 @@ int compile(FILE *fp)
 		
 		switch(token.type) {
 		case NUMBER:
-			printf("%d ", token.value);
+			printf("number: %d\n", token.value);
+			break;
+		case STRING:
+			printf("string: %s\n", token.string);
 			break;
 		case CHAR:
-			printf("%s ", token.string);
+			printf("char: %c\n", token.value);
+			break;
+		case SYMBOL:
+			printf("symbol: %s\n", token.string);
 			break;
 		case OPERATOR:
-			printf("%c ", token.value);
+			printf("operator: %c\n", token.value);
 			break;
 		default:
 			printf("* ");
@@ -98,17 +104,42 @@ next_token_begin:
 		token.type = NUMBER;
 		break;
 	case OPERATOR:
-		token.value = c;
-		token.type = OPERATOR;
+		if(c == '\"') {
+			for(i = 0;;) {
+				c = next_char();
+				if(c == '\"') break;
+				buf[i++] = c;
+			}
+			buf[i] = '\0';
+			strncpy(token.string, buf, 50);
+			token.type = STRING;
+		} else if(c == '\'') {
+			c = next_char();
+			if(c != '\\') {
+				token.value = c;
+				break;
+			} else {
+				c = next_char();
+				token.value = c;
+			}
+			if(next_char() != '\'') {
+				token.type = UNSET;
+				return token;
+			}
+			token.type = CHAR;
+		} else {
+			token.value = c;
+			token.type = OPERATOR;
+		}
 		break;
 	case SPACE:
 		goto next_token_begin;
 		break;
-	case CHAR:
+	case SYMBOL:
 		buf[0] = c;
 		for(i = 1;;) {
 			c = next_char();
-			if(token_type[c] != CHAR) {
+			if(token_type[c] != SYMBOL) {
 				ungetc(c, fin);
 				break;
 			}
@@ -116,7 +147,7 @@ next_token_begin:
 		}
 		buf[i] = '\0';
 		strncpy(token.string, buf, 50);
-		token.type = CHAR;
+		token.type = SYMBOL;
 		break;
 	default:
 		token.type = UNSET;
@@ -141,11 +172,11 @@ int init_token_type(void)
 	}
 	
 	for(i = 'a'; i < 'z'; i++) {
-		token_type[i] = CHAR;
+		token_type[i] = SYMBOL;
 	}
 	
 	for(i = 'A'; i < 'Z'; i++) {
-		token_type[i] = CHAR;
+		token_type[i] = SYMBOL;
 	}
 	
 	token_type['_'] = CHAR;
