@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 
 #include "compile.h"
@@ -18,14 +19,32 @@ char f_init_type;
 int compile(FILE *fp)
 {
 	Token token;
+	int i;
 	
 	fin = fp;
 	f_fp = 1;
 	
-	token = next_token();
-	if(token.type == END_OF_FILE) ;//break;
-	
-	printf("%d: %d\n", (int)token.type, token.value);
+	for(i = 0; i < 10000; i++) {
+		token = next_token();
+		if(token.type == END_OF_FILE) {
+			break;
+		}
+		
+		switch(token.type) {
+		case NUMBER:
+			printf("%d ", token.value);
+			break;
+		case CHAR:
+			printf("%s ", token.string);
+			break;
+		case OPERATOR:
+			printf("%c ", token.value);
+			break;
+		default:
+			printf("* ");
+			break;
+		}
+	}
 	
 	f_fp = 0;
 	return 0;
@@ -38,6 +57,7 @@ char next_char(void)
 	if(f_fp == 0) return (char)-1;
 	
 	c = fgetc(fin);
+	if(c == EOF) c = 0;
 	
 	return c;
 }
@@ -48,39 +68,58 @@ Token next_token(void)
 	char c;
 	char buf[100];
 	int i;
-	
-	i = 0;
+	int value;
 	
 	if(f_init_type == 0) init_token_type();
+
+	token.value = 0;
+	token.string[0] = '\0';
+	token.type = UNSET;
+
+next_token_begin:
 	
 	c = next_char();
-
 	switch(token_type[c]) {
-	case EOF:
-		token.value = 0;
+	case END_OF_FILE:
 		token.type = END_OF_FILE;
-		return token;
 		break;
 	case NUMBER:
-		buf[i++] = c;
+		value = 0;
+		value = c - '0';
 		for( ;; ) {
 			c = next_char();
 			if(token_type[c] != NUMBER) {
 				ungetc(c, fin);
 				break;
 			}
-			buf[i++] = c;
+			value = value * 10 + (c - '0');
 		}
-		buf[i] = '\0';
-		token.value = atoi(buf);
+		token.value = value;
 		token.type = NUMBER;
 		break;
 	case OPERATOR:
 		token.value = c;
 		token.type = OPERATOR;
-		return token;
+		break;
+	case SPACE:
+		goto next_token_begin;
+		break;
+	case CHAR:
+		buf[0] = c;
+		for(i = 1;;) {
+			c = next_char();
+			if(token_type[c] != CHAR) {
+				ungetc(c, fin);
+				break;
+			}
+			buf[i++] = c;
+		}
+		buf[i] = '\0';
+		strncpy(token.string, buf, 50);
+		token.type = CHAR;
 		break;
 	default:
+		token.type = UNSET;
 		break;
 	}
 	
@@ -113,6 +152,7 @@ int init_token_type(void)
 	
 	token_type[' '] = SPACE;
 	token_type['\n'] = SPACE;
+	token_type['\r'] = SPACE;
 	token_type['\t'] = SPACE;
 	
 	token_type['!'] = OPERATOR;
@@ -145,6 +185,7 @@ int init_token_type(void)
 	token_type[';'] = OPERATOR;
 	token_type['='] = OPERATOR;
 	token_type['?'] = OPERATOR;
+	token_type[0] = END_OF_FILE;
 	
 	f_init_type = 1;
 	

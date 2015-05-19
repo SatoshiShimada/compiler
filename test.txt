@@ -1,11 +1,11 @@
-100
-123
--432
+#include <stdio.h>
 
 int main(void)
 {
-	int value;
-	char msg;
+	int value = 100;
+	char msg = "test";
+
+	printf("%s", msg);
 
 	return 0;
 }
