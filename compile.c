@@ -59,9 +59,10 @@ int statement(void)
 						nnntoken = next_token();
 						if(nnntoken.type == NUMBER) {
 							variable.value = nnntoken.value;
+							strncpy(variable.name, ntoken.type, 30);
 							variable.type = INT;
 							
-							printf("type: %s, value: %d\n", "int", variable.value);
+							printf("type: %s, value: %d\n", token.string, variable.value);
 						}
 					}
 				}
