@@ -33,6 +33,7 @@ int statement(void)
 {
 	Token token, ntoken, nntoken, nnntoken;
 	Variable variable;
+	Node node;
 	int i;
 	
 	for(i = 0; i < 10000; i++) {
@@ -46,7 +47,7 @@ int statement(void)
 		
 		switch(token.type) {
 		case NUMBER:
-			printf("%d ", token.value);
+			//printf("%d ", token.value);
 			break;
 		case KEYWORD:
 			if(!strcmp(token.string, "int") || !strcmp(token.string, "void") || !strcmp(token.string, "short") ||
@@ -55,36 +56,42 @@ int statement(void)
 				ntoken = next_token();
 				if(ntoken.type == SYMBOL) {
 					nntoken = next_token();
-					if(nntoken.type == OPERATOR && nntoken.value == '=') {
+					if(nntoken.type == OPERATOR && nntoken.value == '=') { /* with initilize */
 						nnntoken = next_token();
 						if(nnntoken.type == NUMBER) {
 							variable.value = nnntoken.value;
-							strncpy(variable.name, ntoken.type, 30);
+							strncpy(variable.name, ntoken.string, 30);
 							variable.type = INT;
 							
-							printf("type: %s, value: %d\n", token.string, variable.value);
+							printf("type: %s, name: %s, value: %d\n", token.string, variable.name, variable.value);
 						}
+					} else if(nntoken.type == SPLIT && nntoken.value == ';') { /* only variable declaration */
+						strncpy(variable.name, ntoken.string, 30);
+						variable.type = INT;
+						variable.value = 0;
+						
+						printf("type: %s, name: %s, value: %d\n", token.string, variable.name, variable.value);
 					}
 				}
 			} else {
 				
 			}
-			printf("%s ", token.string);
+			//printf("%s ", token.string);
 			break;
 		case STRING:
-			printf("%s ", token.string);
+			//printf("%s ", token.string);
 			break;
 		case CHAR:
-			printf("%c ", token.value);
+			//printf("%c ", token.value);
 			break;
 		case SYMBOL:
-			printf("%s ", token.string);
+			//printf("%s ", token.string);
 			break;
 		case OPERATOR:
-			printf("%c ", token.value);
+			//printf("%c ", token.value);
 			break;
 		case SPLIT:
-			printf("\n%c\n", token.value);
+			//printf("\n%c\n", token.value);
 			break;
 		default:
 			printf("* ");
@@ -177,7 +184,7 @@ next_token_begin:
 		buf[0] = c;
 		for(i = 1;;) {
 			c = next_char();
-			if(token_type[c] != SYMBOL || token_type[c] != SYMBOL) {
+			if(token_type[c] != SYMBOL && token_type[c] != NUMBER) {
 				ungetc(c, fin);
 				break;
 			}

@@ -34,4 +34,11 @@ typedef struct {
 	Variable_type type;
 } Variable;
 
+typedef struct node {
+	int operator;
+	Token_type type;
+	int value;
+	struct node *right, *left;
+} Node;
+
 int compile(FILE *);

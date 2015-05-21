@@ -1,6 +1,10 @@
 int main(void)
 {
-	int value = 123;
+	int value10 = 123;
+
+	int value12;
+
+	int value3 = 10;
 
 	printf("Hello\n");
 	
