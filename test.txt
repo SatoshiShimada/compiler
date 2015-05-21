@@ -1,12 +1,6 @@
 int main(void)
 {
-	int value10 = 123;
+	int value = 123;
 
-	int value12;
-
-	int value3 = 10;
-
-	printf("Hello\n");
-	
 	return 0;
 }

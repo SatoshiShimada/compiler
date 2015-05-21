@@ -28,11 +28,16 @@ typedef struct {
 	Token_type type;
 } Token;
 
-typedef struct {
+typedef struct VARIABLE {
 	char name[30]; /* name of variable */
 	int value;
 	Variable_type type;
 } Variable;
+
+typedef struct {
+	int count;
+	Variable *var[1000];
+} Variable_list;
 
 typedef struct node {
 	int operator;
@@ -40,5 +45,10 @@ typedef struct node {
 	int value;
 	struct node *right, *left;
 } Node;
+
+typedef struct {
+	Variable_type type;
+	char name[30];
+} Function;
 
 int compile(FILE *);
