@@ -177,7 +177,7 @@ next_token_begin:
 		buf[0] = c;
 		for(i = 1;;) {
 			c = next_char();
-			if(token_type[c] != SYMBOL) {
+			if(token_type[c] != SYMBOL || token_type[c] != SYMBOL) {
 				ungetc(c, fin);
 				break;
 			}
