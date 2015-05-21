@@ -28,7 +28,7 @@ typedef struct {
 	Token_type type;
 } Token;
 
-typedef struct VARIABLE {
+typedef struct {
 	char name[30]; /* name of variable */
 	int value;
 	Variable_type type;
