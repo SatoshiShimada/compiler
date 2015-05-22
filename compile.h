@@ -40,10 +40,12 @@ typedef struct {
 } Variable_list;
 
 typedef struct node {
-	int operator;
-	Token_type type;
+	union {
+		int value;
+		char op;
+	}
 	int value;
-	struct node *right, *left;
+	struct node *next;
 } Node;
 
 typedef struct {
