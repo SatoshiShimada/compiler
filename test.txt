@@ -1,6 +1,8 @@
 int main(void)
 {
-	int value = 123;
+	int value1 = 123;
+	int value2=200;
+	char ch = 'a';
 
 	return 0;
 }

@@ -28,11 +28,15 @@ int compile(FILE *fp)
 {
 	fin = fp;
 	f_fp = 1;
+	int i;
 	
 	var_list_init();
 	
 	expression();
 	
+	for(i = 0; i < var_list.count; i++) {
+		printf("%s, %d\n", var_list.var[i]->name, var_list.var[i]->value);
+	}
 	var_list_exit();
 	
 	f_fp = 0;
