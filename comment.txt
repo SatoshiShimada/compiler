@@ -1,0 +1,16 @@
+/*
+ * Test program for debug of my compiler
+ */
+
+int main(void)
+{
+	int value1 = 123;
+	int value2    =	123;
+	// unsigned int counter;
+	int value3=200;
+	char ch = 'a';
+
+	//return 0;
+	return 1;
+}
+
